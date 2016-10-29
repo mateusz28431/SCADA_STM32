@@ -32,9 +32,8 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
-
 /* USER CODE BEGIN Includes */
-
+#include "dc_model.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -43,7 +42,9 @@ TIM_HandleTypeDef htim10;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+dc_data d;
+model_parameters par;
+states x;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,6 +60,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance == TIM10)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+		rk4(&x,&par,9.8f,0.01f);
 	}
 }
 /* USER CODE END PFP */
@@ -71,7 +73,14 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	d.R = 2;
+	d.ke = 0.1;
+	d.km = 0.1;
+	d.J = 0.1;
+	d.Mobc = 9.8;
+	set_parameters(&d,&par);
+	x.x1 = 0;
+	x.x2 = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
