@@ -18,7 +18,8 @@ D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/s
 D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c \
 D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c \
 D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.c \
-D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c 
+D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c \
+D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.c 
 
 OBJS += \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal.o \
@@ -35,7 +36,8 @@ OBJS += \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_rcc.o \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_rcc_ex.o \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim.o \
-./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim_ex.o 
+./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim_ex.o \
+./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_uart.o 
 
 C_DEPS += \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal.d \
@@ -52,7 +54,8 @@ C_DEPS += \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_rcc.d \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_rcc_ex.d \
 ./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim.d \
-./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim_ex.d 
+./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim_ex.d \
+./Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_uart.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -169,6 +172,14 @@ Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim.o: D:/STUDIA/semestr9/WSSiSS_proj
 	@echo ' '
 
 Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_tim_ex.o: D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: MCU GCC Compiler'
+	@echo %cd%
+	arm-none-eabi-gcc -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-sp-d16 -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))" -DUSE_HAL_DRIVER -DSTM32F746xx -I"D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Inc" -I"D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc" -I"D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy" -I"D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/CMSIS/Include" -I"D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/CMSIS/Device/ST/STM32F7xx/Include"  -Os -g3 -Wall -fmessage-length=0 -ffunction-sections -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Drivers/STM32F7xx_HAL_Driver/stm32f7xx_hal_uart.o: D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Compiler'
 	@echo %cd%

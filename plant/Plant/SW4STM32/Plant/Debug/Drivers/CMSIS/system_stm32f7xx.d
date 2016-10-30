@@ -26,7 +26,9 @@ Drivers/CMSIS/system_stm32f7xx.o: \
  D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr.h \
  D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr_ex.h \
  D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h \
- D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h
+ D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h \
+ D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h \
+ D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h
 
 D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f7xx.h:
 
@@ -81,3 +83,7 @@ D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/s
 D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h:
 
 D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h:
+
+D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h:
+
+D:/STUDIA/semestr9/WSSiSS_projekt/plant/Plant/Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h:
