@@ -40,9 +40,11 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim10;
 
+UART_HandleTypeDef huart2;
+
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+uint8_t recieve;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -50,6 +52,7 @@ void SystemClock_Config(void);
 void Error_Handler(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -59,6 +62,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
         HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 	}
+}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	HAL_UART_Transmit_IT(&huart2, &recieve, 1);
+	HAL_UART_Receive_IT(&huart2, &recieve, 1);
 }
 /* USER CODE END PFP */
 
@@ -84,9 +92,11 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM10_Init();
+  MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
+  HAL_UART_Receive_IT(&huart2,&recieve,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -157,6 +167,25 @@ static void MX_TIM10_Init(void)
   htim10.Init.Period = 9999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+}
+
+/* USART2 init function */
+static void MX_USART2_UART_Init(void)
+{
+
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     Error_Handler();
   }
