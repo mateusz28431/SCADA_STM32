@@ -116,31 +116,31 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
-  if(huart->Instance==USART6)
+  if(huart->Instance==UART7)
   {
-  /* USER CODE BEGIN USART6_MspInit 0 */
+  /* USER CODE BEGIN UART7_MspInit 0 */
 
-  /* USER CODE END USART6_MspInit 0 */
+  /* USER CODE END UART7_MspInit 0 */
     /* Peripheral clock enable */
-    __HAL_RCC_USART6_CLK_ENABLE();
+    __HAL_RCC_UART7_CLK_ENABLE();
   
-    /**USART6 GPIO Configuration    
-    PC7     ------> USART6_RX
-    PC6     ------> USART6_TX 
+    /**UART7 GPIO Configuration    
+    PF7     ------> UART7_TX
+    PF6     ------> UART7_RX 
     */
     GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    GPIO_InitStruct.Alternate = GPIO_AF8_UART7;
+    HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
     /* Peripheral interrupt init */
-    HAL_NVIC_SetPriority(USART6_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(USART6_IRQn);
-  /* USER CODE BEGIN USART6_MspInit 1 */
+    HAL_NVIC_SetPriority(UART7_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(UART7_IRQn);
+  /* USER CODE BEGIN UART7_MspInit 1 */
 
-  /* USER CODE END USART6_MspInit 1 */
+  /* USER CODE END UART7_MspInit 1 */
   }
 
 }
@@ -148,27 +148,27 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
 
-  if(huart->Instance==USART6)
+  if(huart->Instance==UART7)
   {
-  /* USER CODE BEGIN USART6_MspDeInit 0 */
+  /* USER CODE BEGIN UART7_MspDeInit 0 */
 
-  /* USER CODE END USART6_MspDeInit 0 */
+  /* USER CODE END UART7_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_USART6_CLK_DISABLE();
+    __HAL_RCC_UART7_CLK_DISABLE();
   
-    /**USART6 GPIO Configuration    
-    PC7     ------> USART6_RX
-    PC6     ------> USART6_TX 
+    /**UART7 GPIO Configuration    
+    PF7     ------> UART7_TX
+    PF6     ------> UART7_RX 
     */
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_7|GPIO_PIN_6);
+    HAL_GPIO_DeInit(GPIOF, GPIO_PIN_7|GPIO_PIN_6);
 
     /* Peripheral interrupt DeInit*/
-    HAL_NVIC_DisableIRQ(USART6_IRQn);
+    HAL_NVIC_DisableIRQ(UART7_IRQn);
 
   }
-  /* USER CODE BEGIN USART6_MspDeInit 1 */
+  /* USER CODE BEGIN UART7_MspDeInit 1 */
 
-  /* USER CODE END USART6_MspDeInit 1 */
+  /* USER CODE END UART7_MspDeInit 1 */
 
 }
 
