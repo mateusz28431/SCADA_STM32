@@ -32,7 +32,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-
+#include <stdlib.h>
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -45,10 +45,20 @@ UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t recieve;
-uint8_t send;
-uint8_t send_spi;
-uint8_t read_spi;
+uint8_t recieve[10];
+uint8_t recieve2[10];
+uint8_t send[10] = "Abcdefghij";
+uint8_t r;
+float control;
+float x1;
+float x2;
+float zadana = 0;
+typedef enum
+{
+	STOP,
+	RUN
+}motor;
+motor M = STOP;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,21 +78,89 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 	}
 }
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART2)
 	{
-		HAL_UART_Transmit_IT(&huart6, &send, 1);
-		HAL_UART_Receive_IT(&huart6, &recieve, 1);
+		int i = 1;
+		char temp[9];
+		switch(recieve[0])
+		{
+			case 'r':
+				M = RUN;
+				control = 1;
+				break;
+			case 's':
+				control = 0;
+				M = STOP;
+				break;
+			case 'w':
+
+				while(recieve[i]!='k'&& (i<10))
+				{
+					temp[i-1]= recieve[i];
+					i++;
+				}
+				zadana = atof(temp);
+				break;
+			case 'x':
+				break;
+			case 'y':
+				break;
+
+		}
+		HAL_UART_Transmit_IT(&huart6, recieve, 10);
+		HAL_UART_Receive_IT(&huart6, recieve2, 10);
+		HAL_UART_Receive_IT(&huart2, recieve, 10);
 	}
 	if(huart->Instance == USART6)
 	{
-		HAL_UART_Transmit_IT(&huart2, &recieve, 1);
-		HAL_UART_Receive_IT(&huart2, &recieve, 1);
+		int i = 1;
+		char temp[9];
+		switch(recieve2[0])
+		{
+			case 'x':
+				while(recieve2[i]!='k'&& (i<10))
+				{
+					temp[i-1]= recieve2[i];
+					i++;
+				}
+				x1 = atof(temp);
+				break;
+			case 'y':
+				while(recieve2[i]!='k'&& (i<10))
+				{
+					temp[i-1]= recieve2[i];
+					i++;
+				}
+				x2 = atof(temp);
+				break;
+		}
+		HAL_UART_Transmit_IT(&huart2, recieve2, 10);
+		HAL_UART_Receive_IT(&huart2, recieve, 10);
+		HAL_UART_Receive_IT(&huart6, recieve2, 10);
 	}
 
 }
+/*
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == USART2)
+	{
+		HAL_UART_Transmit_IT(&huart6, &r, 1);
+		HAL_UART_Receive_IT(&huart6, &r, 1);
+		//HAL_UART_Receive_IT(&huart2, recieve, 10);
+	}
+	if(huart->Instance == USART6)
+	{
+		HAL_UART_Transmit_IT(&huart2, &r, 1);
+		HAL_UART_Receive_IT(&huart2, &r, 1);
+		//HAL_UART_Receive_IT(&huart6, recieve, 10);
+	}
 
+}
+*/
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -93,7 +171,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	send = 'a';
+	//send = "abcdefghij";
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -112,8 +190,9 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
-  HAL_UART_Receive_IT(&huart2,&recieve,1);
-
+  HAL_UART_Receive_IT(&huart2,recieve,10);
+  HAL_UART_Receive_IT(&huart6,recieve2,10);
+  //HAL_UART_Receive_IT(&huart2,&r,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -195,7 +274,7 @@ static void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
+  huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;

@@ -35,6 +35,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "dc_model.h"
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -45,11 +46,20 @@ UART_HandleTypeDef huart7;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+typedef enum
+{
+	RUN,
+	STOP
+}motor_state;
 dc_data d;
 model_parameters par;
 states x;
-uint8_t recieve;
-uint8_t send;
+uint8_t recieve[10];
+uint8_t send[10] = "x12.434kkk";
+char s1[8];
+char s2[8];
+float u=0;
+motor_state M = STOP;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,17 +76,76 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance == TIM10)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-		rk4(&x,&par,9.8f,0.01f);
+		if(M == RUN)
+		{
+			rk4(&x,&par,9.8f,0.01f);
+			sprintf(s1,"%.3f",x.x1);
+			sprintf(s2,"%.3f",x.x2);
+		}
+	}
+}
+int length(char* napis)
+{
+    int i = 1;
+    while(napis[i]!='\0')
+        i++;
+    return i;
+}
+void procces_states(char* s, float* x,char id)
+{
+	uint8_t len,i;
+	i =1;
+	sprintf(s,"%.3f",*x);
+	len = length(s);
+	send[0] = id;
+	while(i<=len)
+	{
+		send[i] = s[i-1];
+	    i++;
+	}
+	for(i = (len+1);i<10;i++)
+	{
+		send[i] = 'k';
 	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-
-	HAL_UART_Transmit_IT(&huart7,&send,1);
-	HAL_UART_Receive_IT(&huart7,&recieve,1);
+	int i=1;
+	char temp[9];
+	switch(recieve[0])
+	{
+		case 'r':
+			M = RUN;
+			break;
+		case 's':
+			M = STOP;
+			u = 0.0;
+			M = STOP;
+			break;
+		case 'u':
+			while(recieve[i]!='k'&& (i<10))
+			{
+				temp[i-1]= recieve[i];
+				i++;
+			}
+			u = atof(temp);
+			break;
+	}
+	procces_states(s1,&x.x1,'x');
+	HAL_UART_Transmit_IT(&huart7,send,10);
+	procces_states(s2,&x.x2,'y');
+	HAL_UART_Transmit_IT(&huart7,send,10);
+	HAL_UART_Receive_IT(&huart7,recieve,10);
 }
-
+/*
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+	HAL_UART_Transmit_IT(&huart7,&s,1);
+	HAL_UART_Receive_IT(&huart7,&r,1);
+}
+*/
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -95,7 +164,7 @@ int main(void)
 	set_parameters(&d,&par);
 	x.x1 = 0;
 	x.x2 = 0;
-	send = 'g';
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -113,7 +182,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
-  HAL_UART_Receive_IT(&huart7,&recieve,1);
+  HAL_UART_Receive_IT(&huart7,recieve,10);
   /* USER CODE END 2 */
 
   /* Infinite loop */

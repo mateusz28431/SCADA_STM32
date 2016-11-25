@@ -19,7 +19,9 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +34,12 @@ public:
     QPushButton *connectButton;
     QComboBox *COMcomboBox;
     QPushButton *exitButton;
+    QPushButton *startMotor;
+    QTextEdit *textEdit;
+    QSlider *horizontalSlider;
+    QLabel *label_2;
+    QLabel *zadanaLabel;
+    QPushButton *zadaj;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -39,7 +47,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(680, 550);
+        MainWindow->resize(1366, 807);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         centralWidget->setMinimumSize(QSize(1366, 768));
@@ -55,11 +63,33 @@ public:
         exitButton = new QPushButton(centralWidget);
         exitButton->setObjectName(QStringLiteral("exitButton"));
         exitButton->setGeometry(QRect(590, 10, 75, 23));
+        startMotor = new QPushButton(centralWidget);
+        startMotor->setObjectName(QStringLiteral("startMotor"));
+        startMotor->setGeometry(QRect(584, 50, 81, 31));
+        textEdit = new QTextEdit(centralWidget);
+        textEdit->setObjectName(QStringLiteral("textEdit"));
+        textEdit->setGeometry(QRect(110, 140, 301, 91));
+        horizontalSlider = new QSlider(centralWidget);
+        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
+        horizontalSlider->setGeometry(QRect(440, 410, 160, 22));
+        horizontalSlider->setMaximum(10);
+        horizontalSlider->setSingleStep(0);
+        horizontalSlider->setOrientation(Qt::Horizontal);
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(440, 380, 91, 21));
+        zadanaLabel = new QLabel(centralWidget);
+        zadanaLabel->setObjectName(QStringLiteral("zadanaLabel"));
+        zadanaLabel->setGeometry(QRect(540, 380, 61, 20));
+        zadanaLabel->setFrameShadow(QFrame::Sunken);
+        zadaj = new QPushButton(centralWidget);
+        zadaj->setObjectName(QStringLiteral("zadaj"));
+        zadaj->setGeometry(QRect(440, 440, 81, 31));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setEnabled(true);
-        menuBar->setGeometry(QRect(0, 0, 680, 21));
+        menuBar->setGeometry(QRect(0, 0, 1366, 21));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -76,6 +106,10 @@ public:
         label->setText(QApplication::translate("MainWindow", "Port COM:", 0));
         connectButton->setText(QApplication::translate("MainWindow", "Po\305\202\304\205cz", 0));
         exitButton->setText(QApplication::translate("MainWindow", "Wyj\305\233cie", 0));
+        startMotor->setText(QApplication::translate("MainWindow", "Uruchom silnik", 0));
+        label_2->setText(QApplication::translate("MainWindow", "Warto\305\233\304\207 zadana:", 0));
+        zadanaLabel->setText(QApplication::translate("MainWindow", "0", 0));
+        zadaj->setText(QApplication::translate("MainWindow", "Zadaj", 0));
     } // retranslateUi
 
 };

@@ -30,6 +30,7 @@ typedef struct
 	float x2;
 }states;
 
+
 void compute_dx(states *dx, states * x, model_parameters * p, float u);
 void set_parameters(dc_data * dc, model_parameters * p);
 void rk4(states * x,model_parameters * parameters, float u,float h);
