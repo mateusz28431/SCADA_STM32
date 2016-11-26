@@ -55,10 +55,10 @@ dc_data d;
 model_parameters par;
 states x;
 uint8_t recieve[10];
-uint8_t send[10] = "x12.434kkk";
+uint8_t send[10];
 char s1[8];
 char s2[8];
-float u=0;
+float u=0.0;
 motor_state M = STOP;
 /* USER CODE END PV */
 
@@ -78,7 +78,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		if(M == RUN)
 		{
-			rk4(&x,&par,9.8f,0.01f);
+			rk4(&x,&par,u,0.01f);
 			sprintf(s1,"%.3f",x.x1);
 			sprintf(s2,"%.3f",x.x2);
 		}
@@ -131,6 +131,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			}
 			u = atof(temp);
 			break;
+        case 'w':
+            break;
 	}
 	procces_states(s1,&x.x1,'x');
 	HAL_UART_Transmit_IT(&huart7,send,10);
@@ -260,9 +262,9 @@ static void MX_TIM10_Init(void)
 {
 
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 10799;
+  htim10.Init.Prescaler = 21599;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 9999;
+  htim10.Init.Period = 99;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
@@ -292,9 +294,9 @@ static void MX_UART7_Init(void)
 
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -333,10 +335,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler */
   /* User can add his own implementation to report the HAL error return state */
-  while(1) 
+  while(1)
   {
   }
-  /* USER CODE END Error_Handler */ 
+  /* USER CODE END Error_Handler */
 }
 
 #ifdef USE_FULL_ASSERT
@@ -361,10 +363,10 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

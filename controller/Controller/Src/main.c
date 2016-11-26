@@ -47,11 +47,12 @@ UART_HandleTypeDef huart6;
 /* Private variables ---------------------------------------------------------*/
 uint8_t recieve[10];
 uint8_t recieve2[10];
-uint8_t send[10] = "Abcdefghij";
+uint8_t send[10];
 uint8_t r;
 float control;
-float x1;
-float x2;
+char con_str[8];
+float x1 = 0;
+float K = 12.0;
 float zadana = 0;
 typedef enum
 {
@@ -71,11 +72,48 @@ static void MX_USART6_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+int length(char* napis)
+{
+    int i = 1;
+    while(napis[i]!='\0')
+        i++;
+    return i;
+}
+void procces_control(char* s, float* con)
+{
+	uint8_t len,i;
+	i =1;
+	sprintf(s,"%.3f",*con);
+	len = length(s);
+	send[0] = 'u';
+	while(i<=len)
+	{
+		send[i] = s[i-1];
+	    i++;
+	}
+	for(i = (len+1);i<10;i++)
+	{
+		send[i] = 'k';
+	}
+}
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM10)
 	{
         HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+        if(M == RUN)
+        {
+            control = K*(zadana-x1);
+            if(control < -12.0)
+                control = -12.0;
+            if(control > 12.0)
+                control = 12.0;
+            procces_control(con_str,&control);
+            HAL_UART_Transmit_IT(&huart6, send, 10);
+            HAL_UART_Receive_IT(&huart6, recieve2, 10);
+
+        }
+
 	}
 }
 
@@ -89,7 +127,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 			case 'r':
 				M = RUN;
-				control = 1;
 				break;
 			case 's':
 				control = 0;
@@ -103,10 +140,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 					i++;
 				}
 				zadana = atof(temp);
-				break;
-			case 'x':
-				break;
-			case 'y':
 				break;
 
 		}
@@ -129,12 +162,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				x1 = atof(temp);
 				break;
 			case 'y':
-				while(recieve2[i]!='k'&& (i<10))
-				{
-					temp[i-1]= recieve2[i];
-					i++;
-				}
-				x2 = atof(temp);
 				break;
 		}
 		HAL_UART_Transmit_IT(&huart2, recieve2, 10);
@@ -258,9 +285,9 @@ static void MX_TIM10_Init(void)
 {
 
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 4199;
+  htim10.Init.Prescaler = 8399;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 9999;
+  htim10.Init.Period = 99;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
@@ -307,9 +334,9 @@ static void MX_USART6_UART_Init(void)
 
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -348,10 +375,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler */
   /* User can add his own implementation to report the HAL error return state */
-  while(1) 
+  while(1)
   {
   }
-  /* USER CODE END Error_Handler */ 
+  /* USER CODE END Error_Handler */
 }
 
 #ifdef USE_FULL_ASSERT
@@ -376,10 +403,10 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
