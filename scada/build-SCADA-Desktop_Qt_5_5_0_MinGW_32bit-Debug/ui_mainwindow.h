@@ -40,6 +40,8 @@ public:
     QLabel *label_2;
     QLabel *zadanaLabel;
     QPushButton *zadaj;
+    QTextEdit *x1_val;
+    QTextEdit *x2_val;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -85,6 +87,12 @@ public:
         zadaj = new QPushButton(centralWidget);
         zadaj->setObjectName(QStringLiteral("zadaj"));
         zadaj->setGeometry(QRect(440, 440, 81, 31));
+        x1_val = new QTextEdit(centralWidget);
+        x1_val->setObjectName(QStringLiteral("x1_val"));
+        x1_val->setGeometry(QRect(410, 520, 91, 21));
+        x2_val = new QTextEdit(centralWidget);
+        x2_val->setObjectName(QStringLiteral("x2_val"));
+        x2_val->setGeometry(QRect(530, 520, 91, 21));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));

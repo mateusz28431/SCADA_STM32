@@ -115,7 +115,7 @@ void MainWindow::RecieveData()
                     i++;
                 }
                 x1 = str.toDouble();
-                ui->textEdit->append(str);
+                ui->x1_val->setText(str);
                 break;
             case 'y':
                 while(r_data.at(i)!='k'&& (i<10))
@@ -123,7 +123,7 @@ void MainWindow::RecieveData()
                     str += r_data.at(i);
                     i++;
                 }
-                ui->textEdit->append(str);
+                ui->x2_val->setText(str);
                 x2 = str.toDouble();
                 break;
         }
