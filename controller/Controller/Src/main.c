@@ -45,15 +45,16 @@ UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t recieve[10];
-uint8_t recieve2[10];
-uint8_t send[10];
-uint8_t r;
+uint8_t recieve[20];
+char send[20];
 float control;
-char con_str[8];
-float x1 = 0;
-float K = 12.0;
-float zadana = 0;
+uint8_t licznik = 0;
+volatile float x1 = 0.0f;
+volatile float x2 = 0.0f;
+const float K1 = -1.673f;
+const float K2 = -2.982f;
+const float u0 =  19.6f;
+volatile int zadana = 0;
 typedef enum
 {
 	STOP,
@@ -72,46 +73,26 @@ static void MX_USART6_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-int length(char* napis)
-{
-    int i = 1;
-    while(napis[i]!='\0')
-        i++;
-    return i;
-}
-void procces_control(char* s, float* con)
-{
-	uint8_t len,i;
-	i =1;
-	sprintf(s,"%.3f",*con);
-	len = length(s);
-	send[0] = 'u';
-	while(i<=len)
-	{
-		send[i] = s[i-1];
-	    i++;
-	}
-	for(i = (len+1);i<10;i++)
-	{
-		send[i] = 'k';
-	}
-}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM10)
 	{
-        HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+       // HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
         if(M == RUN)
         {
-            control = K*(zadana-x1);
-            if(control < -12.0)
-                control = -12.0;
-            if(control > 12.0)
-                control = 12.0;
-            procces_control(con_str,&control);
-            HAL_UART_Transmit_IT(&huart6, send, 10);
-            HAL_UART_Receive_IT(&huart6, recieve2, 10);
+            control = K1*(x1-zadana)+K2*x2;
+            control = control +u0;
+            if(control < 0)
+                control =0;
+            if(control > 24.0)
+                control = 24.0;
 
+            int dz = (int)control;
+            int val = control*100;
+            val = val%100;
+            sprintf(send,"u%d.%d",dz,val);
+            HAL_UART_Transmit_IT(&huart6,(uint8_t*)send,20);
         }
 
 	}
@@ -127,46 +108,64 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 			case 'r':
 				M = RUN;
+				HAL_UART_Transmit_IT(&huart6, recieve, 20);
 				break;
 			case 's':
 				control = 0;
 				M = STOP;
+				HAL_UART_Transmit_IT(&huart6, recieve, 20);
 				break;
 			case 'w':
 
-				while(recieve[i]!='k'&& (i<10))
+				while(recieve[i]!='k'&& (i<20))
 				{
 					temp[i-1]= recieve[i];
 					i++;
 				}
-				zadana = atof(temp);
+				zadana = atoi(temp);
 				break;
 
 		}
-		HAL_UART_Transmit_IT(&huart6, recieve, 10);
-		HAL_UART_Receive_IT(&huart6, recieve2, 10);
-		HAL_UART_Receive_IT(&huart2, recieve, 10);
+
+		HAL_UART_Receive_IT(&huart6, recieve, 20);
+		HAL_UART_Receive_IT(&huart2, recieve, 20);
 	}
 	if(huart->Instance == USART6)
 	{
-		int i = 1;
-		char temp[9];
-		switch(recieve2[0])
+		int i2 = 1;
+		char temp2[9];
+		int i3 = 1;
+		char temp3[9];
+		switch(recieve[0])
 		{
 			case 'x':
-				while(recieve2[i]!='k'&& (i<10))
+				HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+				while(recieve[i2]!='y'&& (i2<20))
 				{
-					temp[i-1]= recieve2[i];
-					i++;
+					temp2[i2-1]= recieve[i2];
+					i2++;
 				}
-				x1 = atof(temp);
-				break;
-			case 'y':
+				x1 = atof(temp2);
+				i2++;
+				i3=0;
+				while(recieve[i2]!='\0'&& (i2<20))
+				{
+					temp3[i3]= recieve[i2];
+					i3++;
+					i2++;
+				}
+				x2 = atof(temp3);
+				if((licznik%10) == 0)
+				{
+					HAL_UART_Transmit_IT(&huart2, recieve, 20);
+					licznik =0;
+				}
+				++licznik;
+				HAL_UART_Receive_IT(&huart6, recieve, 20);
 				break;
 		}
-		HAL_UART_Transmit_IT(&huart2, recieve2, 10);
-		HAL_UART_Receive_IT(&huart2, recieve, 10);
-		HAL_UART_Receive_IT(&huart6, recieve2, 10);
+		HAL_UART_Receive_IT(&huart2, recieve, 20);
+		HAL_UART_Receive_IT(&huart6, recieve, 20);
 	}
 
 }
@@ -217,8 +216,8 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
-  HAL_UART_Receive_IT(&huart2,recieve,10);
-  HAL_UART_Receive_IT(&huart6,recieve2,10);
+  HAL_UART_Receive_IT(&huart2,recieve,20);
+  HAL_UART_Receive_IT(&huart6,recieve,20);
   //HAL_UART_Receive_IT(&huart2,&r,1);
   /* USER CODE END 2 */
 

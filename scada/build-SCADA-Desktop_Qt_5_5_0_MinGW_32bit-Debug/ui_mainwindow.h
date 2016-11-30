@@ -23,6 +23,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
+#include "qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -42,6 +43,8 @@ public:
     QPushButton *zadaj;
     QTextEdit *x1_val;
     QTextEdit *x2_val;
+    QCustomPlot *CustomPlot;
+    QCustomPlot *CustomPlot2;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -70,29 +73,36 @@ public:
         startMotor->setGeometry(QRect(584, 50, 81, 31));
         textEdit = new QTextEdit(centralWidget);
         textEdit->setObjectName(QStringLiteral("textEdit"));
-        textEdit->setGeometry(QRect(110, 140, 301, 91));
+        textEdit->setGeometry(QRect(70, 520, 301, 91));
         horizontalSlider = new QSlider(centralWidget);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(440, 410, 160, 22));
+        horizontalSlider->setGeometry(QRect(580, 520, 160, 22));
+        horizontalSlider->setMinimum(-10);
         horizontalSlider->setMaximum(10);
         horizontalSlider->setSingleStep(0);
         horizontalSlider->setOrientation(Qt::Horizontal);
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(440, 380, 91, 21));
+        label_2->setGeometry(QRect(580, 490, 91, 21));
         zadanaLabel = new QLabel(centralWidget);
         zadanaLabel->setObjectName(QStringLiteral("zadanaLabel"));
-        zadanaLabel->setGeometry(QRect(540, 380, 61, 20));
+        zadanaLabel->setGeometry(QRect(680, 490, 61, 20));
         zadanaLabel->setFrameShadow(QFrame::Sunken);
         zadaj = new QPushButton(centralWidget);
         zadaj->setObjectName(QStringLiteral("zadaj"));
-        zadaj->setGeometry(QRect(440, 440, 81, 31));
+        zadaj->setGeometry(QRect(580, 550, 81, 31));
         x1_val = new QTextEdit(centralWidget);
         x1_val->setObjectName(QStringLiteral("x1_val"));
-        x1_val->setGeometry(QRect(410, 520, 91, 21));
+        x1_val->setGeometry(QRect(530, 630, 111, 31));
         x2_val = new QTextEdit(centralWidget);
         x2_val->setObjectName(QStringLiteral("x2_val"));
-        x2_val->setGeometry(QRect(530, 520, 91, 21));
+        x2_val->setGeometry(QRect(670, 630, 91, 31));
+        CustomPlot = new QCustomPlot(centralWidget);
+        CustomPlot->setObjectName(QStringLiteral("CustomPlot"));
+        CustomPlot->setGeometry(QRect(50, 150, 501, 261));
+        CustomPlot2 = new QCustomPlot(centralWidget);
+        CustomPlot2->setObjectName(QStringLiteral("CustomPlot2"));
+        CustomPlot2->setGeometry(QRect(720, 110, 501, 281));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));

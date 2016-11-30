@@ -48,17 +48,17 @@ UART_HandleTypeDef huart7;
 /* Private variables ---------------------------------------------------------*/
 typedef enum
 {
-	RUN,
-	STOP
+	STOP,
+	RUN
 }motor_state;
 dc_data d;
 model_parameters par;
 states x;
 uint8_t recieve[10];
-uint8_t send[10];
-char s1[8];
-char s2[8];
-float u=0.0;
+char send[20] = "x-12.234y-12.234";
+char s1[9];
+char s2[9];
+volatile float u=0.0;
 motor_state M = STOP;
 /* USER CODE END PV */
 
@@ -71,43 +71,58 @@ static void MX_UART7_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM10)
 	{
-		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+		//HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		if(M == RUN)
 		{
 			rk4(&x,&par,u,0.01f);
-			sprintf(s1,"%.3f",x.x1);
-			sprintf(s2,"%.3f",x.x2);
+			//x1
+			int dz = (int)x.x1;
+			int val = x.x1*100;
+			val = val%100;
+			int dz2 = (int)x.x2;
+			int val2 = x.x2*100;
+			val2 = val2%100;
+			if((val<0) && (dz>=0))
+			{
+				if((val2<0) && (dz2>=0))
+					sprintf(send,"x-%d.%dy-%d.%d",dz,(-1*val),dz2,(-1*val2));
+				else if((val2<0)&&(dz2<0))
+					sprintf(send,"x-%d.%dy%d.%d",dz,(-1*val),dz2,(-1*val2));
+				else
+					sprintf(send,"x-%d.%dy%d.%d",dz,(-1*val),dz2,val2);
+			}
+			else if((val<0)&&(dz<0))
+			{
+				if((val2<0) && (dz2>=0))
+					sprintf(send,"x%d.%dy-%d.%d",dz,(-1*val),dz2,(-1*val2));
+				else if((val2<0)&&(dz2<0))
+					sprintf(send,"x%d.%dy%d.%d",dz,(-1*val),dz2,(-1*val2));
+				else
+					sprintf(send,"x%d.%dy%d.%d",dz,(-1*val),dz2,val2);
+			}
+			else
+			{
+				if((val2<0) && (dz2>=0))
+					sprintf(send,"x%d.%dy-%d.%d",dz,val,dz2,(-1*val2));
+				else if((val<0)&&(dz2<0))
+					sprintf(send,"x%d.%dy%d.%d",dz,val,dz2,(-1*val2));
+				else
+					sprintf(send,"x%d.%dy%d.%d",dz,val,dz2,val2);
+
+			}
+
+			HAL_UART_Transmit_IT(&huart7,(uint8_t*)send,20);
+			HAL_UART_Receive_IT(&huart7,recieve,20);
 		}
 	}
 }
-int length(char* napis)
-{
-    int i = 1;
-    while(napis[i]!='\0')
-        i++;
-    return i;
-}
-void procces_states(char* s, float* x,char id)
-{
-	uint8_t len,i;
-	i =1;
-	sprintf(s,"%.3f",*x);
-	len = length(s);
-	send[0] = id;
-	while(i<=len)
-	{
-		send[i] = s[i-1];
-	    i++;
-	}
-	for(i = (len+1);i<10;i++)
-	{
-		send[i] = 'k';
-	}
-}
+
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -117,14 +132,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		case 'r':
 			M = RUN;
+			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,SET);
 			break;
 		case 's':
 			M = STOP;
 			u = 0.0;
-			M = STOP;
+			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,RESET);
 			break;
 		case 'u':
-			while(recieve[i]!='k'&& (i<10))
+			while(recieve[i]!='\0'&& (i<20))
 			{
 				temp[i-1]= recieve[i];
 				i++;
@@ -133,12 +149,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
         case 'w':
             break;
+
 	}
-	procces_states(s1,&x.x1,'x');
-	HAL_UART_Transmit_IT(&huart7,send,10);
-	procces_states(s2,&x.x2,'y');
-	HAL_UART_Transmit_IT(&huart7,send,10);
-	HAL_UART_Receive_IT(&huart7,recieve,10);
+	HAL_UART_Receive_IT(&huart7,recieve,20);
+
 }
 /*
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -164,7 +178,7 @@ int main(void)
 	d.J = 0.1;
 	d.Mobc = 9.8;
 	set_parameters(&d,&par);
-	x.x1 = 0;
+	x.x1 = 0.1f;
 	x.x2 = 0;
 
   /* USER CODE END 1 */
@@ -184,7 +198,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
-  HAL_UART_Receive_IT(&huart7,recieve,10);
+  HAL_UART_Receive_IT(&huart7,recieve,20);
   /* USER CODE END 2 */
 
   /* Infinite loop */

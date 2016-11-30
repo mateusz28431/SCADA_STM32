@@ -15,7 +15,7 @@ void set_parameters(dc_data * dc, model_parameters * p)
 {
 	p->a = (dc->ke*dc->km)/((dc->J*dc->R));
 	p->b = dc->km/((dc->J*dc->R));
-	p->c = dc->Mobc/dc->J;
+	p->c = 0.1*dc->Mobc/dc->J;
 }
 void rk4(states * x,model_parameters * p, float u,float h)
 {
