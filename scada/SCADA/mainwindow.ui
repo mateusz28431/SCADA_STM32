@@ -2,16 +2,37 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1366</width>
-    <height>807</height>
+    <height>809</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1366</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1366</width>
+    <height>809</height>
+   </size>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>1</width>
+    <height>1</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SCADA</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="minimumSize">
@@ -25,9 +46,17 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>61</width>
-      <height>16</height>
+      <width>131</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Port COM:</string>
@@ -36,11 +65,16 @@
    <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>330</x>
       <y>10</y>
-      <width>75</width>
-      <height>23</height>
+      <width>131</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Połącz</string>
@@ -49,66 +83,77 @@
    <widget class="QComboBox" name="COMcomboBox">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>190</x>
       <y>10</y>
-      <width>69</width>
-      <height>22</height>
+      <width>131</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
     </property>
    </widget>
    <widget class="QPushButton" name="exitButton">
     <property name="geometry">
      <rect>
-      <x>590</x>
+      <x>1200</x>
       <y>10</y>
-      <width>75</width>
-      <height>23</height>
+      <width>131</width>
+      <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>Wyjście</string>
+     <string>Zamknij</string>
     </property>
    </widget>
    <widget class="QPushButton" name="startMotor">
     <property name="geometry">
      <rect>
-      <x>584</x>
-      <y>50</y>
-      <width>81</width>
-      <height>31</height>
+      <x>720</x>
+      <y>10</y>
+      <width>160</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>3</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Uruchom silnik</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>520</y>
-      <width>301</width>
-      <height>91</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QSlider" name="horizontalSlider">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>520</y>
-      <width>160</width>
-      <height>22</height>
+      <x>60</x>
+      <y>590</y>
+      <width>500</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-10</number>
+     <number>-180</number>
     </property>
     <property name="maximum">
-     <number>10</number>
+     <number>180</number>
     </property>
     <property name="singleStep">
-     <number>0</number>
+     <number>10</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -117,11 +162,18 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>490</y>
-      <width>91</width>
-      <height>21</height>
+      <x>60</x>
+      <y>550</y>
+      <width>201</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Wartość zadana:</string>
@@ -130,11 +182,16 @@
    <widget class="QLabel" name="zadanaLabel">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>490</y>
-      <width>61</width>
-      <height>20</height>
+      <x>280</x>
+      <y>550</y>
+      <width>141</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Sunken</enum>
@@ -146,55 +203,331 @@
    <widget class="QPushButton" name="zadaj">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>440</x>
       <y>550</y>
-      <width>81</width>
-      <height>31</height>
+      <width>131</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Zadaj</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="x1_val">
+   <widget class="QCheckBox" name="notification">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>630</y>
-      <width>111</width>
+      <x>1170</x>
+      <y>660</y>
+      <width>151</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Powiadmenie</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="emailEdit">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>560</y>
+      <width>271</width>
       <height>31</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QTextEdit" name="x2_val">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>630</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
    </widget>
-   <widget class="QCustomPlot" name="CustomPlot" native="true">
+   <widget class="QPushButton" name="saveEmailBtn">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>150</y>
-      <width>501</width>
-      <height>261</height>
+      <x>1190</x>
+      <y>610</y>
+      <width>131</width>
+      <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Zapisz</string>
+    </property>
    </widget>
-   <widget class="QCustomPlot" name="CustomPlot2" native="true">
+   <widget class="QSlider" name="Hslider">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>540</y>
+      <width>41</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-180</number>
+    </property>
+    <property name="maximum">
+     <number>180</number>
+    </property>
+    <property name="singleStep">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QSlider" name="Lslider">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>550</y>
+      <width>41</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-180</number>
+    </property>
+    <property name="maximum">
+     <number>180</number>
+    </property>
+    <property name="singleStep">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
       <x>720</x>
-      <y>110</y>
-      <width>501</width>
-      <height>281</height>
+      <y>530</y>
+      <width>100</width>
+      <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>H Limit</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="HLabel">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>580</y>
+      <width>131</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LLabel">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>580</y>
+      <width>131</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>530</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>L Limit</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="applyAlarmbtn">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>710</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Zatwierdź</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="setAlarm">
+    <property name="geometry">
+     <rect>
+      <x>1170</x>
+      <y>710</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Alarm</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="x1_disp">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>690</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="smallDecimalPoint">
+     <bool>true</bool>
+    </property>
+    <property name="digitCount">
+     <number>5</number>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="x2_disp">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>690</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="smallDecimalPoint">
+     <bool>true</bool>
+    </property>
+    <property name="digitCount">
+     <number>5</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>650</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Położenie [rad]</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>650</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Prędkość [rad/s]</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>530</y>
+      <width>181</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Adres e-mail:</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>1321</width>
+      <height>441</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QCustomPlot" name="CustomPlot" native="true"/>
+     </item>
+     <item>
+      <widget class="QCustomPlot" name="CustomPlot2" native="true"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -210,7 +543,13 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

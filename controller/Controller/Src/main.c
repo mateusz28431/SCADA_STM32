@@ -47,14 +47,14 @@ UART_HandleTypeDef huart6;
 /* Private variables ---------------------------------------------------------*/
 uint8_t recieve[20];
 char send[20];
-float control;
+float control = 19.6;
 uint8_t licznik = 0;
-volatile float x1 = 0.0f;
-volatile float x2 = 0.0f;
-const float K1 = -1.673f;
-const float K2 = -2.982f;
-const float u0 =  19.6f;
-volatile int zadana = 0;
+float x1 = 0.0f;
+float x2 = 0.0f;
+float K1 = -3.1622f;
+float K2 = -4.6601f;
+float u0 =  19.6f;
+float zadana = 0.0f;
 typedef enum
 {
 	STOP,
@@ -84,14 +84,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             control = K1*(x1-zadana)+K2*x2;
             control = control +u0;
             if(control < 0)
-                control =0;
+                control = 0;
             if(control > 24.0)
                 control = 24.0;
 
             int dz = (int)control;
-            int val = control*100;
-            val = val%100;
-            sprintf(send,"u%d.%d",dz,val);
+            int val = control*1000;
+            val = val%1000;
+            int d_abs;
+            d_abs = abs(val);
+            if(d_abs<10)
+            	sprintf(send,"u%d.00%d",dz,d_abs);
+            else if((d_abs<100)&&(d_abs>9))
+            	sprintf(send,"u%d.0%d",dz,d_abs);
+            else
+            	sprintf(send,"u%d.%d",dz,d_abs);
+            //sprintf(send,"u%d.%d",dz,val);
             HAL_UART_Transmit_IT(&huart6,(uint8_t*)send,20);
         }
 
@@ -111,7 +119,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				HAL_UART_Transmit_IT(&huart6, recieve, 20);
 				break;
 			case 's':
-				control = 0;
+				control = u0;
 				M = STOP;
 				HAL_UART_Transmit_IT(&huart6, recieve, 20);
 				break;
@@ -122,7 +130,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 					temp[i-1]= recieve[i];
 					i++;
 				}
-				zadana = atoi(temp);
+				zadana = atof(temp);
 				break;
 
 		}

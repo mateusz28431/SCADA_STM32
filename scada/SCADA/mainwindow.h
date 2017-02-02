@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QSerialPort>
+#include <QFile>
+#include <QTextStream>
+#include "smtp.h"
 namespace Ui {
 
 
@@ -29,6 +32,13 @@ private slots:
     void RecieveData();
     void zadanaChanged();
     void zadajPolozenie();
+    void sendEmail();
+    void saveAdress();
+    void hSliderChanged();
+    void lSliderChanged();
+    void applyAlarams();
+    void alarmStatusChanged();
+
 
 private:
     Ui::MainWindow *ui;
@@ -36,8 +46,22 @@ private:
     QString portName;
     motorState state;
     QByteArray r_data;
-    int wartosc_zadana;
+    float wartosc_zadana;
     double x1,x2;
+    float hlimit, llimit;
+    bool halarm;
+    bool lalarm;
+    bool alarmCanBeSet;
+    bool emailSent;
+    QPalette* sample_palette;
+    QString email;
+    QString tresc;
+    Smtp* smtp;
+
+signals:
+    void EmailSig();
+
+
 };
 
 #endif // MAINWINDOW_H

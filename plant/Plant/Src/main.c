@@ -36,6 +36,7 @@
 /* USER CODE BEGIN Includes */
 #include "dc_model.h"
 #include <stdlib.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -58,6 +59,7 @@ uint8_t recieve[10];
 char send[20] = "x-12.234y-12.234";
 char s1[9];
 char s2[9];
+char s_temp[10];
 volatile float u=0.0;
 motor_state M = STOP;
 /* USER CODE END PV */
@@ -71,22 +73,78 @@ static void MX_UART7_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+void convertD2S(float x, float y, char* s2, char* res)
+{
+	int dz = (int)x;
+	int temp = x*1000;
+	int val = temp%1000;
+	if(x<0)
+	{
+		int c_abs,d_abs;
+		c_abs = abs(dz);
+		d_abs = abs(val);
+		if(d_abs<10)
+			sprintf(res,"x-%d.00%d",c_abs,d_abs);
+		else if((d_abs<100)&&(d_abs>9))
+			sprintf(res,"x-%d.0%d",c_abs,d_abs);
+		else
+			sprintf(res,"x-%d.%d",c_abs,d_abs);
+	}
+	else
+	{
+		int d_abs;
+		d_abs = abs(val);
+		if(d_abs<10)
+			sprintf(res,"x%d.00%d",dz,d_abs);
+		else if((d_abs<100)&&(d_abs>9))
+			sprintf(res,"x%d.0%d",dz,d_abs);
+		else
+			sprintf(res,"x%d.%d",dz,d_abs);
+	}
+	int dz2 = (int)y;
+	int temp2 = y*1000;
+	int val2 = temp2%1000;
+	if(y<0)
+	{
+		int c_abs,d_abs;
+		c_abs = abs(dz2);
+		d_abs = abs(val2);
+		if(d_abs<10)
+			sprintf(s2,"y-%d.00%d",c_abs,d_abs);
+		else if((d_abs<100)&&(d_abs>9))
+			sprintf(s2,"y-%d.0%d",c_abs,d_abs);
+		else
+			sprintf(s2,"y-%d.%d",c_abs,d_abs);
+	}
+	else
+	{
+		int d_abs;
+		d_abs = abs(val2);
+		if(d_abs<10)
+			sprintf(s2,"y%d.00%d",dz2,d_abs);
+		else if((d_abs<100)&&(d_abs>9))
+			sprintf(s2,"y%d.0%d",dz2,d_abs);
+		else
+			sprintf(s2,"y%d.%d",dz2,d_abs);
+	}
+	strncat(res,s2,20);
+}
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim->Instance == TIM10)
 	{
-		//HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		if(M == RUN)
 		{
 			rk4(&x,&par,u,0.01f);
 			//x1
+/*
 			int dz = (int)x.x1;
-			int val = x.x1*100;
-			val = val%100;
+			int val = x.x1*1000;
+			val = val%1000;
 			int dz2 = (int)x.x2;
-			int val2 = x.x2*100;
-			val2 = val2%100;
+			int val2 = x.x2*1000;
+			val2 = val2%1000;
 			if((val<0) && (dz>=0))
 			{
 				if((val2<0) && (dz2>=0))
@@ -114,8 +172,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				else
 					sprintf(send,"x%d.%dy%d.%d",dz,val,dz2,val2);
 
-			}
-
+			}*/
+			convertD2S(x.x1,x.x2,s_temp,send);
 			HAL_UART_Transmit_IT(&huart7,(uint8_t*)send,20);
 			HAL_UART_Receive_IT(&huart7,recieve,20);
 		}
@@ -133,11 +191,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		case 'r':
 			M = RUN;
 			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,SET);
+			HAL_TIM_Base_Start_IT(&htim10);
 			break;
 		case 's':
 			M = STOP;
 			u = 0.0;
 			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,RESET);
+			HAL_TIM_Base_Stop_IT(&htim10);
 			break;
 		case 'u':
 			while(recieve[i]!='\0'&& (i<20))
@@ -154,14 +214,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	HAL_UART_Receive_IT(&huart7,recieve,20);
 
 }
-/*
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-	HAL_UART_Transmit_IT(&huart7,&s,1);
-	HAL_UART_Receive_IT(&huart7,&r,1);
-}
-*/
+
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -176,9 +229,9 @@ int main(void)
 	d.ke = 0.1;
 	d.km = 0.1;
 	d.J = 0.1;
-	d.Mobc = 9.8;
+	d.Mobc = 0.98;
 	set_parameters(&d,&par);
-	x.x1 = 0.1f;
+	x.x1 = 0;
 	x.x2 = 0;
 
   /* USER CODE END 1 */
@@ -197,7 +250,7 @@ int main(void)
   MX_UART7_Init();
 
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim10);
+
   HAL_UART_Receive_IT(&huart7,recieve,20);
   /* USER CODE END 2 */
 

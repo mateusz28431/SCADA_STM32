@@ -15,7 +15,7 @@ void set_parameters(dc_data * dc, model_parameters * p)
 {
 	p->a = (dc->ke*dc->km)/((dc->J*dc->R));
 	p->b = dc->km/((dc->J*dc->R));
-	p->c = 0.1*dc->Mobc/dc->J;
+	p->c = dc->Mobc/dc->J;
 }
 void rk4(states * x,model_parameters * p, float u,float h)
 {
@@ -47,6 +47,11 @@ void rk4(states * x,model_parameters * p, float u,float h)
 	compute_dx(&dx4,&x_temp,p,u);
 
 	x->x1 = x->x1  + h3*(dx2.x1+dx3.x1) + h6*(dx1.x1+dx4.x1);
+	if(x->x1 >= 3.14f)
+		x->x1 = 3.14f;
+	if(x->x1 <= -3.14f)
+		x->x1 = -3.14f;
+
 	x->x2 = x->x2 + h3*(dx2.x2+dx3.x2) + h6*(dx1.x2+dx4.x2);
 
 }
